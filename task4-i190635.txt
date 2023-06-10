@@ -1,0 +1,248 @@
+//////////////////////////////////////////////1
+use authors
+db.createCollection("authors", {
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["firstName", "lastName", "dateOfBirth"],
+      properties: {
+        firstName: { bsonType: "string" },
+        lastName: { bsonType: "string" },
+        dateOfBirth: { bsonType: "date" }
+      }
+    }
+  }
+})
+
+use users
+db.createCollection("users", {
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["username", "password", "isActive", "addresses", "dateOfCreation"],
+      properties: {
+        username: { bsonType: "string" },
+        password: { bsonType: "string" },
+        isActive: { bsonType: "bool" },
+        addresses: {
+          bsonType: "array",
+          items: {
+            bsonType: "object",
+            required: ["street", "city", "zip", "state", "country"],
+            properties: {
+              street: { bsonType: "string" },
+              city: { bsonType: "string" },
+              zip: { bsonType: "string" },
+              state: { bsonType: "string" },
+              country: { bsonType: "string" }
+            }
+          }
+        },
+        dateOfCreation: { bsonType: "date" }
+      }
+    }
+  }
+})
+
+use books
+db.createCollection("books", {
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["title", "author", "isbn", "publishers", "isAvailable", "ages", "summary", "subjects", "notes"],
+      properties: {
+        title: { bsonType: "string" },
+        author: { bsonType: "string" },
+        isbn: { bsonType: "string" },
+        publishers: {
+          bsonType: "array",
+          items: {
+            bsonType: "object",
+            required: ["name", "date", "address"],
+            properties: {
+              name: { bsonType: "string" },
+              date: { bsonType: "date" },
+              address: {
+                bsonType: "object",
+                required: ["street", "city", "zip", "state", "country"],
+                properties: {
+                  street: { bsonType: "string" },
+                  city: { bsonType: "string" },
+                  zip: { bsonType: "string" },
+                  state: { bsonType: "string" },
+                  country: { bsonType: "string" }
+                }
+              }
+            }
+          }
+        },
+        isAvailable: { bsonType: "bool" },
+        ages: { bsonType: "string" },
+        summary: { bsonType: "string" },
+        subjects: {
+          bsonType: "array",
+          items: { bsonType: "string" }
+        },
+        notes: {
+          bsonType: "array",
+          items: {
+            bsonType: "object",
+            required: ["user", "noteBody", "language"],
+            properties: {
+              user: { bsonType: "string" },
+              noteBody: { bsonType: "string" },
+              language: { bsonType: "string" }
+            }
+          }
+        }
+      }
+    }
+  }
+})
+
+////////////////////////////////////////////////////////////////////2
+
+// Inserting data into the 'authors' collection
+db.authors.insertOne({
+  "firstName": "John",
+  "lastName": "Doe",
+  "dateOfBirth": ISODate("1990-01-01")
+})
+
+db.authors.insertOne({
+  "firstName": "Jane",
+  "lastName": "Smith",
+  "dateOfBirth": ISODate("1985-05-15")
+})
+
+// Inserting data into the 'users' collection
+db.users.insertOne({
+  "username": "user1",
+  "password": "pass123",
+  "isActive": true,
+  "addresses": [
+    {
+      "street": "123 Main St",
+      "city": "Boston",
+      "zip": "12345",
+      "state": "MA",
+      "country": "USA"
+    },
+    {
+      "street": "456 Elm St",
+      "city": "New York",
+      "zip": "67890",
+      "state": "NY",
+      "country": "USA"
+    }
+  ],
+  "dateOfCreation": ISODate("2022-01-01")
+})
+
+db.users.insertOne({
+  "username": "user2",
+  "password": "pass456",
+  "isActive": false,
+  "addresses": [
+    {
+      "street": "789 Oak St",
+      "city": "Boston",
+      "zip": "54321",
+      "state": "MA",
+      "country": "USA"
+    }
+  ],
+  "dateOfCreation": ISODate("2023-05-01")
+})
+
+// Inserting data into the 'books' collection
+db.books.insertOne({
+  "title": "Book 1",
+  "author": "John Doe",
+  "isbn": "1234567890",
+  "publishers": [
+    {
+      "name": "Publisher A",
+      "date": ISODate("2020-01-01"),
+      "address": {
+        "street": "111 Broadway",
+        "city": "New York",
+        "zip": "11111",
+        "state": "NY",
+        "country": "USA"
+      }
+    },
+    {
+      "name": "Publisher B",
+      "date": ISODate("2022-06-01"),
+      "address": {
+        "street": "222 Main St",
+        "city": "Chicago",
+        "zip": "22222",
+        "state": "IL",
+        "country": "USA"
+      }
+    }
+  ],
+  "isAvailable": true,
+  "ages": "Adult",
+  "summary": "This is a summary of Book 1",
+  "subjects": ["Fiction", "Mystery"],
+  "notes": [
+    {
+      "user": "user1",
+      "noteBody": "This book was amazing!",
+      "language": "English"
+    },
+    {
+      "user": "user2",
+      "noteBody": "I didn't like this book.",
+      "language": "English"
+    }
+  ]
+})
+
+db.books.insertOne({
+  "title": "Book 2",
+  "author": "Jane Smith",
+  "isbn": "9876543210",
+  "publishers": [
+    {
+      "name": "Publisher C",
+      "date": ISODate("2019-02-01"),
+      "address": {
+        "street": "333 Elm St",
+        "city": "Los Angeles",
+        "zip": "33333",
+        "state": "CA",
+        "country": "USA"
+      }
+    }
+  ],
+  "isAvailable": false,
+  "ages": "Teen",
+  "summary": "This is a summary of Book 2",
+  "subjects": ["Fantasy"],
+  "notes": []
+})
+
+////////////////////////////////////////////////////////////3
+
+db.books.find({})
+
+///////////////////////////////////////////////////////////4
+
+db.books.find({ "author": "Danielle Steel" })
+
+///////////////////////////////////////////////////////////5
+
+db.users.find({
+  dateOfCreation: { $gt: ISODate("2014-12-15") },
+  "addresses.city": "Boston"
+})
+
+///////////////////////////////////////////////////////////6
+db.books.find({ "publishers": { $size: { $gt: 1 } } })
+
+///////////////////////////////////////////////////////////7
+db.books.find({ "notes": { $exists: true, $not: { $size: 0 } } })
